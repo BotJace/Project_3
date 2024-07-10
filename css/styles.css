@@ -1,0 +1,11 @@
+#map {
+    height: 600px;
+    width: 100%;
+}
+
+.legend {
+    background-color: white;
+    padding: 10px;
+    line-height: 18px;
+    color: #555;
+}
