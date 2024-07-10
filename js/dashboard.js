@@ -22,10 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add more crime types and their colors here
     };
 
-    // Function to load and plot data for a specific city
-    function loadCityData(city) {
-        var filePath = 'data/' + city + '.csv';
+    // Function to load and plot data for a specific city and year
+    function loadCityData(city, year) {
+        var filePath = 'data/' + city + '/' + year + '.csv';
+        console.log('Loading data from:', filePath); // Debugging output
         d3.csv(filePath).then(function (data) {
+            console.log('Data loaded:', data); // Debugging output
+
             // Clear existing markers
             map.eachLayer(function (layer) {
                 if (layer instanceof L.CircleMarker) {
@@ -49,14 +52,26 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Variables to store current selections
+    var selectedCity = 'austin';
+    var selectedYear = '2020';
+
     // Event listener for city selection
     document.getElementById('city-select').addEventListener('change', function () {
-        var city = this.value;
-        loadCityData(city);
+        selectedCity = this.value;
+        console.log('City selected:', selectedCity); // Debugging output
+        loadCityData(selectedCity, selectedYear);
     });
 
-    // Load data for the default city on page load
-    loadCityData('austin');
+    // Event listener for year selection
+    document.getElementById('year-select').addEventListener('change', function () {
+        selectedYear = this.value;
+        console.log('Year selected:', selectedYear); // Debugging output
+        loadCityData(selectedCity, selectedYear);
+    });
+
+    // Load data for the default city and year on page load
+    loadCityData(selectedCity, selectedYear);
 
     // Add a legend to the map
     var legend = L.control({ position: 'bottomright' });
