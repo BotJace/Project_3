@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crime Data Dashboard</title>
-    <link rel="stylesheet" href="libs/leaflet.css">
-    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
             <select class="form-control" id="city-select">
                 <option value="austin">Austin</option>
                 <option value="losangeles">Los Angeles</option>
-                <option value="brooklyn">Brooklyn</option>
+                <option value="manhattan">Manhattan</option>
             </select>
         </div>
         <div class="form-group">
@@ -31,8 +31,8 @@
         </div>
         <div id="map"></div>
     </div>
-    <script src="libs/leaflet.js"></script>
-    <script src="libs/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

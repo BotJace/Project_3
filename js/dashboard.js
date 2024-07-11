@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cityCoordinates = {
         "austin": [30.2672, -97.7431],
         "losangeles": [34.0522, -118.2437],
-        "brooklyn": [40.6782, -73.9442]
+        "manhattan": [40.7831, -73.9712]
     };
 
     // Initialize the map with default view
@@ -14,42 +14,54 @@ document.addEventListener('DOMContentLoaded', function () {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Define color coding for crime types
-    var crimeColors = {
-        "Assault": "red",
-        "Burglary": "blue",
-        "Theft": "green"
-        // Add more crime types and their colors here
-    };
-
     // Function to load and plot data for a specific city and year
     function loadCityData(city, year) {
         var filePath = 'data/' + city + '/' + year + '.csv';
         console.log('Loading data from:', filePath); // Debugging output
-        d3.csv(filePath).then(function (data) {
-            console.log('Data loaded:', data); // Debugging output
 
-            // Clear existing markers
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.CircleMarker) {
-                    map.removeLayer(layer);
+        // Fetch the CSV file using d3.csv
+        fetch(filePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
                 }
-            });
+                return response.text();
+            })
+            .then(csvText => {
+                var data = d3.csvParse(csvText);
+                console.log('Data loaded:', data); // Debugging output
 
-            // Plot the crime data on the map
-            data.forEach(function (crime) {
-                var coordinates = [parseFloat(crime.latitude), parseFloat(crime.longitude)];
-                L.circleMarker(coordinates, {
-                    color: crimeColors[crime.type],
-                    radius: 8
-                }).addTo(map).bindPopup(crime.type);
-            });
+                // Clear existing markers
+                map.eachLayer(function (layer) {
+                    if (layer instanceof L.CircleMarker) {
+                        map.removeLayer(layer);
+                    }
+                });
 
-            // Adjust map view to the city's coordinates
-            map.setView(cityCoordinates[city], 13);
-        }).catch(function (error) {
-            console.error('Error loading data:', error);
-        });
+                // Plot the crime data on the map
+                data.forEach(function (crime) {
+                    var latitude = parseFloat(crime.Latitude);
+                    var longitude = parseFloat(crime.Longitude);
+
+                    // Check if latitude and longitude are valid numbers
+                    if (isNaN(latitude) || isNaN(longitude)) {
+                        console.error('Invalid coordinates:', crime);
+                        return; // Skip this entry
+                    }
+
+                    var coordinates = [latitude, longitude];
+                    L.circleMarker(coordinates, {
+                        radius: 8
+                    }).addTo(map).bindPopup(crime['Highest Offense Description']);
+                });
+
+                // Adjust map view to the city's coordinates
+                map.setView(cityCoordinates[city], 13);
+            })
+            .catch(function (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data: ' + error.message); // More user-friendly alert
+            });
     }
 
     // Variables to store current selections
@@ -72,19 +84,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load data for the default city and year on page load
     loadCityData(selectedCity, selectedYear);
-
-    // Add a legend to the map
-    var legend = L.control({ position: 'bottomright' });
-
-    legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'legend');
-        for (var crimeType in crimeColors) {
-            div.innerHTML +=
-                '<i style="background:' + crimeColors[crimeType] + '"></i> ' +
-                crimeType + '<br>';
-        }
-        return div;
-    };
-
-    legend.addTo(map);
 });
