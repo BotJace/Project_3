@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
+    // Define color coding for crime categories
+    var crimeColors = {
+        "Violent": "red",
+        "Theft": "black",
+        "Other": "darkgrey"
+    };
+
     // Function to load and plot data for a specific city and year
     function loadCityData(city, year) {
         var filePath = 'data/' + city + '/' + year + '.csv';
@@ -51,8 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     var coordinates = [latitude, longitude];
                     L.circleMarker(coordinates, {
-                        radius: 8
-                    }).addTo(map).bindPopup(crime['Highest Offense Description']);
+                        color: crimeColors[crime.category], // Use category column for color coding
+                        radius: 0.8
+                    }).addTo(map).bindPopup(`${crime.category}: ${crime.Description}`);
                 });
 
                 // Adjust map view to the city's coordinates
@@ -60,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(function (error) {
                 console.error('Error loading data:', error);
-                alert('Error loading data: ' + error.message); // More user-friendly alert
             });
     }
 
@@ -84,4 +91,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load data for the default city and year on page load
     loadCityData(selectedCity, selectedYear);
+
+    // Create legend
+    var legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function () {
+        var div = L.DomUtil.create('div', 'info legend');
+        var categories = ["Violent", "Theft", "Other"];
+        var labels = [];
+
+        // Loop through categories to generate a label with a colored square for each category
+        categories.forEach(function (category) {
+            div.innerHTML += '<div class="legend-item"><div class="legend-color" style="background:' + crimeColors[category] + '"></div><div class="legend-text">' + category + '</div></div>';
+        });
+
+        return div;
+    };
+
+    legend.addTo(map);
 });
