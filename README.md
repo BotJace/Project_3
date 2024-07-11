@@ -52,8 +52,11 @@ to_csv(): To save the cleaned DataFrame back to a CSV file.
 The datetime module is used in conjunction with Pandas for handling date and time data.
 
 Functions used:
+
 dt.date: To extract the date from a datetime object.
+
 dt.time: To extract the time from a datetime object.
+
 dt.year: To filter data by year.
 
 4. Error Handling
