@@ -38,9 +38,13 @@ Pandas is a powerful data manipulation and analysis library in Python. It provid
 Functions used:
 
 read_csv(): To read the CSV file into a DataFrame.
+
 to_datetime(): To convert date strings to datetime objects.
+
 copy(): To create a copy of the DataFrame.
+
 map(): To map classifications to a new column.
+
 to_csv(): To save the cleaned DataFrame back to a CSV file.
 
 3. Datetime
