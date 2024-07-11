@@ -16,6 +16,7 @@ Categorizing Crimes:
 
 Crime descriptions are mapped to broader categories such as Violent, Theft, and Misdemeanor.
 A new column, 'category', is added based on these classifications.
+
 Saving Cleaned Data:
 
 The cleaned data is saved to a new CSV file for further use.
