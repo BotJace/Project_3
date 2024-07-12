@@ -21,6 +21,27 @@ document.addEventListener('DOMContentLoaded', function () {
         "Other": "darkgrey"
     };
 
+    // Initialize bar chart
+    var ctx = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Violent", "Theft", "Other"],
+            datasets: [{
+                label: 'Number of Crimes',
+                data: [0, 0, 0],
+                backgroundColor: ['red', 'black', 'darkgrey']
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
     // Function to load and plot data for a specific city and year
     function loadCityData(city, year) {
         var filePath = 'data/' + city + '/' + year + '.csv';
@@ -45,23 +66,62 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
-                // Plot the crime data on the map
+                // Initialize crime counts
+                var crimeCounts = {
+                    "Violent": 0,
+                    "Theft": 0,
+                    "Other": 0
+                };
+
+                // Group crimes by coordinates
+                var crimeGroups = {};
                 data.forEach(function (crime) {
-                    var latitude = parseFloat(crime.Latitude);
-                    var longitude = parseFloat(crime.Longitude);
+                    var coordinates = `${crime.Latitude},${crime.Longitude}`;
+                    if (!crimeGroups[coordinates]) {
+                        crimeGroups[coordinates] = [];
+                    }
+                    crimeGroups[coordinates].push(crime);
+                });
+
+                // Plot the crime data on the map
+                Object.keys(crimeGroups).forEach(function (coordinates) {
+                    var crimes = crimeGroups[coordinates];
+                    var [latitude, longitude] = coordinates.split(',').map(parseFloat);
 
                     // Check if latitude and longitude are valid numbers
                     if (isNaN(latitude) || isNaN(longitude)) {
-                        console.error('Invalid coordinates:', crime);
+                        console.error('Invalid coordinates:', coordinates);
                         return; // Skip this entry
                     }
 
-                    var coordinates = [latitude, longitude];
-                    L.circleMarker(coordinates, {
-                        color: crimeColors[crime.category], // Use category column for color coding
+                    // Generate popup content
+                    var popupContent = crimes.map(crime => {
+                        var category = crime.category || "Unidentified";
+                        var description = crime.Description || "No description available";
+                        return `${category}: ${description}`;
+                    }).join('<br>');
+
+                    // Add marker to the map
+                    L.circleMarker([latitude, longitude], {
+                        color: crimeColors[crimes[0].category] || "gray", // Use the category of the first crime for color coding
                         radius: 0.8
-                    }).addTo(map).bindPopup(`${crime.category}: ${crime.Description}`);
+                    }).addTo(map).bindPopup(popupContent);
+
+                    // Update crime counts
+                    crimes.forEach(function (crime) {
+                        if (crime.category in crimeCounts) {
+                            crimeCounts[crime.category]++;
+                        }
+                    });
                 });
+
+                // Update the bar chart
+                barChart.data.datasets[0].data = [
+                    crimeCounts["Violent"],
+                    crimeCounts["Theft"],
+                    crimeCounts["Other"]
+                ];
+                barChart.update();
 
                 // Adjust map view to the city's coordinates
                 map.setView(cityCoordinates[city], 13);
@@ -87,6 +147,19 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedYear = this.value;
         console.log('Year selected:', selectedYear); // Debugging output
         loadCityData(selectedCity, selectedYear);
+    });
+
+    // Event listener for view toggle
+    document.getElementById('toggle-view').addEventListener('click', function () {
+        var mapContainer = document.getElementById('map');
+        var chartContainer = document.getElementById('barChart');
+        if (mapContainer.style.display === 'none') {
+            mapContainer.style.display = 'block';
+            chartContainer.style.display = 'none';
+        } else {
+            mapContainer.style.display = 'none';
+            chartContainer.style.display = 'block';
+        }
     });
 
     // Load data for the default city and year on page load
