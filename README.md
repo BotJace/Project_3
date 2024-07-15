@@ -1,10 +1,10 @@
 # Comparative Crime Data Dashboard for Manhattan, Austin & Los Angeles
 
-Objective
+#Objective
 
 The project aims to create a comprehensive dashboard that allows users to compare crime data across different cities (Austin, Los Angeles, Manhattan) and different years. This comparison is especially useful for travelers and residents to understand crime trends and make informed decisions.
 
-Data Cleaning and Preparation
+#Data Cleaning and Preparation
 
 Austin Crime DAta:
 
