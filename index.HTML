@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Data Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <h1 class="my-4">Crime Data Dashboard</h1>
+        <label for="city-select">Select City:</label>
+        <select id="city-select">
+            <option value="austin">Austin</option>
+            <option value="losangeles">Los Angeles</option>
+            <option value="manhattan">Manhattan</option>
+        </select>
+
+        <label for="year-select">Select Year:</label>
+        <select id="year-select">
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+
+        <button id="toggle-view">Toggle Bar Chart</button>
+    </div>
+
+    <div id="map"></div>
+    <canvas id="barChart" style="display:none;"></canvas>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
