@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Comparative Crime Data Dashboard for Manhattan, Austin & Los Angeles
 
 **Objective**
@@ -99,3 +100,13 @@ Add a legend to the map to indicate color coding for crime categories.
 **Final Product**
 
 The final product is a user-friendly dashboard that allows users to visually compare crime data across different cities and years. The map view shows crime locations with color-coded markers, while the bar chart provides a summary of crime categories. This tool helps in understanding crime trends and making informed decisions regarding safety.
+=======
+Running on local server:
+1. Install local http-server
+- npm install -g http-server
+2.  Cd to project
+- cd path/to/your/project_root
+http-server -p 8080
+3. Open browser and nav to
+- http://localhost:8080
+>>>>>>> backend-branch
